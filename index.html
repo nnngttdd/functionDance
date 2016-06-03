@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>函数小人跳舞</title>
+</head>
+<body>
+	<div id="main"></div>
+</body>
+<script type="text/javascript">
+	var options = {
+		'element' : 'main'
+	}
+	function FunctionDance(options){
+		//配置项
+		this.config = {
+			'element' : 'FunctionDance',
+			'width' : '500',
+			'height': '500',
+			'fill': {
+				// 'background' : '#FEFEFF',
+				'background': '#86D3F6',
+				// 
+			},
+			'stroke': {
+				'background': '#DDDDDD',
+			},
+			'space': 25,
+			'function': [
+				function(x){
+					return x;
+				},
+				function(x){
+					return -x;
+				},
+				function(x){
+					return Math.abs(x);
+				},
+				function(x){
+					return -Math.abs(x);
+				},
+				function(x){
+					return x*x;
+				},
+				function(x){
+					return x*x*x;
+				},
+				function(x){
+					return 1/x;
+				},
+				function(x){
+					return -1/x;
+				}
+			]
+		}
+
+		//初始化
+		FunctionDance.prototype.init = function(){
+			//将传入的配置项替换默认的配置项
+			for(this.i in options){
+				this.config[this.i] = options[this.i]
+			}
+			//获取父级元素
+			if(document.getElementById(this.config.element)){
+				//如果有该id元素则获取
+				this.element = document.getElementById(this.config.element)
+			}else{
+				//如果没有该id元素则创建该id元素并获取
+				this.element = document.createElement('div');
+				this.element.id = this.config.element;
+				document.body.appendChild(this.element)
+			}
+			//创建canvas元素
+			this.canvas = document.createElement('canvas');
+			this.canvas.width = this.config.width;
+			this.canvas.height = this.config.height;
+			this.element.appendChild(this.canvas);
+			//获取canvas的context内容
+			this.context = this.canvas.getContext("2d");
+		}
+
+		FunctionDance.prototype.drawBackground = function(){
+			//打底
+			this.context.fillStyle = this.config.fill.background;
+			this.context.fillRect(0, 0, this.config.width, this.config.height);
+			//网格
+			//纵向网格
+			for(this.i=0; this.i<this.config.width/this.config.space*2; this.i++){
+				this.context.beginPath();
+				this.context.strokeStyle = this.config.stroke.background;
+				if(this.i == 0){
+					this.context.lineWidth = 2;
+					this.context.moveTo(this.config.width/2, 0);
+					this.context.lineTo(this.config.width/2, this.config.height);
+				}else{
+					this.context.lineWidth = 1;
+					this.context.moveTo(this.config.width/2-this.config.space*this.i, 0);
+					this.context.lineTo(this.config.width/2-this.config.space*this.i, this.config.height);
+					this.context.moveTo(this.config.width/2+this.config.space*this.i, 0);
+					this.context.lineTo(this.config.width/2+this.config.space*this.i, this.config.height);
+				}
+				this.context.stroke();
+				this.context.closePath();
+			}
+			//横向网格
+			for(this.i=0; this.i<this.config.height/this.config.space*2; this.i++){
+				this.context.beginPath();
+				this.context.strokeStyle = this.config.stroke.background;
+				if(this.i == 0){
+					this.context.lineWidth = 2;
+					this.context.moveTo(0, this.config.height/2);
+					this.context.lineTo(this.config.width, this.config.height/2);
+				}else{
+					this.context.lineWidth = 1;
+					this.context.moveTo(0, this.config.height/2-this.i*this.config.space);
+					this.context.lineTo(this.config.width, this.config.height/2-this.i*this.config.space);
+					this.context.moveTo(0, this.config.height/2+this.i*this.config.space);
+					this.context.lineTo(this.config.width, this.config.height/2+this.i*this.config.space);
+				}
+				this.context.stroke();
+				this.context.closePath();
+			}
+		}
+
+		FunctionDance.prototype.draw = function(){
+			this.drawBackground();
+		}
+		this.init();
+		this.draw();
+	}
+
+	var functionDance = new FunctionDance(options);
+
+</script>
+</html>
